@@ -9,6 +9,7 @@ body {
     height: 100%;
     background: #000000;
     background-position: center;
+    user-select: none;
 }
 #index {
     width: 100%;
@@ -22,6 +23,47 @@ body {
 }
 #index #help {
     color: #FF3333;
+}
+#choice {
+    display: none;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+}
+#choice .font {
+    width: 100%;
+    text-align: center;
+    color: #FFFFFF;
+}
+#choice .setting {
+    display: inline-block;
+    width: fit-content;
+    text-align: left;
+    color: #FFFFFF;
+}
+#setting {
+    display: none;
+    opacity: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+#setting .main {
+    margin-top: 20vh;
+    margin-left: 25%;
+    width: 50%;
+    height: 50%;
+    background: rgba(0, 0, 0, 0.3);
+}
+#setting .font {
+    width: 100%;
+    text-align: center;
+    color: #FFFFFF;
+    background: rgba(0, 0, 0, 0.3);
 }
 @media (max-aspect-ratio: 2/3) {
     #indexBtn {
@@ -43,6 +85,16 @@ body {
         padding-top: 2vw;
         font-size: 4vw;
         line-height: 6vw;
+    }
+    .setting {
+        margin-top: 4vw;
+        margin-left: 4vw;
+        font-size: 4vw;
+        line-height: 6vw;
+    }
+    #setting .font {
+        font-size: 5vw;
+        line-height: 10vw;
     }
 }
 @media (min-aspect-ratio: 2/3) {
@@ -68,6 +120,16 @@ body {
         padding-top: 1.5vh;
         font-size: 3vh;
         line-height: 4.5vh;
+    }
+    .setting {
+        margin-top: 3vh;
+        margin-left: 3vh;
+        font-size: 3vh;
+        line-height: 4.5vh;
+    }
+    #setting .font{
+        font-size: 3.75vh;
+        line-height: 7.5vh;
     }
 }
 @media (max-aspect-ratio: 1/1) {

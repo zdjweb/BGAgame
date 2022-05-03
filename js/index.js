@@ -1,52 +1,91 @@
 const body = document.querySelector('body');
 const index = document.querySelector('#index');
+const choice = document.querySelector('#choice');
+const settingBtn = document.querySelectorAll('.setting');
+const setting = document.querySelector('#setting');
 (() => {
     let timer;
-    const outIndex = () => {
-        let opacity = +window.getComputedStyle(index).opacity;
-        if (timer != null && opacity != 1) {
+    let page = [index, choice],
+    now = 0,
+    set = 0;
+    const show = (e, f) => {
+        let opacity = +window.getComputedStyle(e).opacity;
+        if (timer != null || opacity != 0) {
+            return;
+        }
+        e.style.display = 'block';
+        timer = setInterval(() => {
+            if (opacity < 1) {
+                e.style.opacity = +((opacity += 0.01).toFixed(2));
+            } else {
+                e.style.opacity = 1;
+                clearInterval(timer);
+                timer = null;
+                f != null ? f() : 0;
+            }
+        }, 5);
+    };
+    const display = (e, f) => {
+        let opacity = +window.getComputedStyle(e).opacity;
+        if (timer != null || opacity != 1) {
             return;
         }
         timer = setInterval(() => {
             if (opacity > 0) {
-                index.style.opacity = +((opacity -= 0.01).toFixed(2));
+                e.style.opacity = +((opacity -= 0.01).toFixed(2));
             } else {
-                Object.assign(index.style, {
+                Object.assign(e.style, {
                     display: 'none',
                     opacity: 0
                 });
                 clearInterval(timer);
+                timer = null;
+                f != null ? f() : 0;
             }
-        }, 10);
+        }, 5);
     };
     index.addEventListener('click', () => {
-        outIndex();
+        display(index, () => {
+            show(choice, () => {
+                now = 1;
+            });
+        });
     });
-    body.addEventListener('keydown', () => {
-        outIndex();
-    });
-})();
-(() => {
-    let timer;
-    const returnIndex = () => {
-        let opacity = +window.getComputedStyle(index).opacity;
-        if (timer != null && opacity != 0) {
-            return;
+    for (let i = 0; i < settingBtn.length; i++) {
+        settingBtn[i].addEventListener('click', () => {
+            show(setting, () => {
+                set = 1;
+            });
+        });
+    }
+    setting.addEventListener('click', (e) => {
+        if (e.target == setting) {
+            display(setting, () => {
+                set = 0;
+            });
         }
-        index.style.display = 'block';
-        timer = setInterval(() => {
-            if (opacity < 1) {
-                index.style.opacity = +((opacity += 0.01).toFixed(2));
-            } else {
-                index.style.opacity = 1;
-                clearInterval(timer);
-            }
-        }, 10);
-    };
+    });
     body.addEventListener('keydown', (e) => {
-        if (e.key == 'Escape') {
-            returnIndex();
+        if (!now) {
+            display(index, () => {
+                show(choice, () => {
+                    now = 1;
+                });
+            });
+        } else {
+            if (e.key == 'Escape') {
+                if (!set) {
+                    display(choice, () => {
+                        show(index, () => {
+                            now = 0;
+                        });
+                    });
+                } else {
+                    display(setting, () => {
+                        set = 0;
+                    });
+                }
+            }
         }
     });
 })();
-body.webkitRequestFullScreen();
