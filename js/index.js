@@ -3,6 +3,7 @@ const index = document.querySelector('#index');
 const choice = document.querySelector('#choice');
 const settingBtn = document.querySelectorAll('.setting');
 const setting = document.querySelector('#setting');
+const returnIndex = document.querySelector('#returnIndex');
 (() => {
     let timer;
     let page = [index, choice],
@@ -64,6 +65,16 @@ const setting = document.querySelector('#setting');
                 set = 0;
             });
         }
+    });
+    returnIndex.addEventListener('click', (e) => {
+        display(setting, () => {
+            set = 0;
+            display(page[now], () => {
+                show(index, () => {
+                    now = 0;
+                })
+            });
+        });
     });
     body.addEventListener('keydown', (e) => {
         if (!now) {
