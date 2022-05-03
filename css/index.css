@@ -1,0 +1,102 @@
+html {
+    width: 100%;
+    height: 100%;
+}
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background: #000000;
+    background-position: center;
+}
+#index {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.8));
+}
+#index .font {
+    width: 100%;
+    text-align: center;
+    color: #FFFFFF;
+}
+#index #help {
+    color: #FF3333;
+}
+@media (max-aspect-ratio: 2/3) {
+    #indexBtn {
+        padding-top: calc(50vh - 4.5vw);
+        font-size: 6vw;
+        line-height: 9vw;
+    }
+    #help {
+        padding-top: 1.5vw;
+        font-size: 3vw;
+        line-height: 4.5vw;
+    }
+    #advice {
+        padding-top: calc((50vh - 44vw) / 4);
+        font-size: 5vw;
+        line-height: 7.5vw;
+    }
+    #adviceMain {
+        padding-top: 2vw;
+        font-size: 4vw;
+        line-height: 6vw;
+    }
+}
+@media (min-aspect-ratio: 2/3) {
+    body {
+        background-image: url(../img/indexBackground.jpg);
+    }
+    #indexBtn {
+        padding-top: 46.625vh;
+        font-size: 4.5vh;
+        line-height: 6.75vh;
+    }
+    #help {
+        padding-top: 1.125vh;
+        font-size: 2.25vh;
+        line-height: 3.375vh;        
+    }
+    #advice {
+        padding-top: 4.25vh;
+        font-size: 3.75vh;
+        line-height: 5.625vh;
+    }
+    #adviceMain {
+        padding-top: 1.5vh;
+        font-size: 3vh;
+        line-height: 4.5vh;
+    }
+}
+@media (max-aspect-ratio: 1/1) {
+    body {
+        background-image: url(../img/indexBackground.png);
+    }
+    @media (max-aspect-ratio: 2799/3600) {
+        body {
+            background-size: auto 100vh;
+        }
+    }
+    @media (min-aspect-ratio: 2799/3600) {
+        body {
+            background-size: 100vw auto;
+        }
+    }
+}
+@media (min-aspect-ratio: 1/1) {
+    body {
+        background-image: url(../img/indexBackground.jpg);
+    }
+    @media (max-aspect-ratio: 6190/4083) {
+        body {
+            background-size: auto 100vh;
+        }
+    }
+    @media (min-aspect-ratio: 6190/4083) {
+        body {
+            background-size: 100vw auto;
+        }
+    }
+}
