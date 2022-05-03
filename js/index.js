@@ -4,6 +4,7 @@ const choice = document.querySelector('#choice');
 const settingBtn = document.querySelectorAll('.setting');
 const setting = document.querySelector('#setting');
 const returnIndex = document.querySelector('#returnIndex');
+const exit = document.querySelector('#exit');
 (() => {
     let timer;
     let page = [index, choice],
@@ -46,6 +47,7 @@ const returnIndex = document.querySelector('#returnIndex');
         }, 5);
     };
     index.addEventListener('click', () => {
+        document.querySelector('html').requestFullscreen();
         display(index, () => {
             show(choice, () => {
                 now = 1;
@@ -66,7 +68,7 @@ const returnIndex = document.querySelector('#returnIndex');
             });
         }
     });
-    returnIndex.addEventListener('click', (e) => {
+    returnIndex.addEventListener('click', () => {
         display(setting, () => {
             set = 0;
             display(page[now], () => {
@@ -76,12 +78,13 @@ const returnIndex = document.querySelector('#returnIndex');
             });
         });
     });
+    exit.addEventListener('click', () => {
+        document.exitFullscreen();
+        returnIndex.click();
+    });
     body.addEventListener('keydown', (e) => {
         if (!now) {
             display(index, () => {
-                show(choice, () => {
-                    now = 1;
-                });
             });
         } else {
             if (e.key == 'Escape') {
