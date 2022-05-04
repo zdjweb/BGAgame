@@ -79,7 +79,12 @@ const exit = document.querySelector('#exit');
         });
     });
     exit.addEventListener('click', () => {
-        document.exitFullscreen();
+        if (window.opener != null) {
+            window.close();
+        }
+        if (document.fullscreenElement != null) {
+            document.exitFullscreen();
+        }
         returnIndex.click();
     });
     body.addEventListener('keydown', (e) => {
