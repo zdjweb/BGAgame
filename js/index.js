@@ -90,6 +90,9 @@ const exit = document.querySelector('#exit');
     body.addEventListener('keydown', (e) => {
         if (!now) {
             display(index, () => {
+                show(choice, () => {
+                    now = 1;
+                });
             });
         } else {
             if (e.key == 'Escape') {
