@@ -77,7 +77,7 @@ body {
         line-height: 4.5vw;
     }
     #advice {
-        padding-top: calc((50vh - 44vw) / 4);
+        padding-top: calc((50vh - 44vw) / 4 * 3);
         font-size: 5vw;
         line-height: 7.5vw;
     }
@@ -116,7 +116,7 @@ body {
         line-height: 3.375vh;        
     }
     #advice {
-        padding-top: 4.25vh;
+        padding-top: 12.75vh;
         font-size: 3.75vh;
         line-height: 5.625vh;
     }
