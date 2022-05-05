@@ -13,9 +13,15 @@ body {
     background-position: center;
     user-select: none;
 }
-#index {
+.page {
+    display: none;
+    opacity: 0;
     width: 100%;
     height: 100%;
+}
+#index {
+    display: block;
+    opacity: 1;
     background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.8));
 }
 #index .font {
@@ -27,10 +33,6 @@ body {
     color: #FF3333;
 }
 #choice {
-    display: none;
-    opacity: 0;
-    width: 100%;
-    height: 100%;
     background: rgba(0, 0, 0, 0.5);
 }
 #choice .font {
@@ -43,6 +45,23 @@ body {
     width: fit-content;
     text-align: left;
     color: #FFFFFF;
+}
+#light {
+    background: #000000;
+}
+.player {
+    position: fixed;
+    border-radius: 50%;
+    background: conic-gradient(#FF3333 0, #FF3333 50%, #FFFFFF 50%, #FFFFFF 100%);
+}
+.player .img {
+    margin: 5%;
+    width: 90%;
+    height: 90%;
+    border-radius: 50%;
+    background: #FF3333;
+    background: url('../img/player.jpg');
+    background-size: 100% 100%;
 }
 #setting {
     display: none;
@@ -66,8 +85,19 @@ body {
     background: rgba(0, 0, 0, 0.3);
 }
 @media (max-aspect-ratio: 2/3) {
-    #indexBtn {
-        padding-top: calc(50vh - 4.5vw);
+    #index .logo {
+        vertical-align: top;
+        padding-top: 1vw;
+        width: 4vw;
+    }
+    #index #name {
+        vertical-align: top;
+        padding-top: calc((50vh - 10.5vw) / 2);
+        padding-bottom: calc((50vh - 10.5vw) / 2);
+        font-size: 4vw;
+        line-height: 6vw;
+    }
+    #tips {
         font-size: 6vw;
         line-height: 9vw;
     }
@@ -102,11 +132,18 @@ body {
     }
 }
 @media (min-aspect-ratio: 2/3) {
-    body {
-        background-image: url(../img/indexBackground.jpg);
+    #index .logo {
+        vertical-align: top;
+        padding-top: 0.75vh;
+        width: 3vh;
     }
-    #indexBtn {
-        padding-top: 46.625vh;
+    #index #name {
+        padding-top: 21.0625vh;
+        padding-bottom: 21.0625vh;
+        font-size: 3vh;
+        line-height: 4.5vh;
+    }
+    #tips {
         font-size: 4.5vh;
         line-height: 6.75vh;
     }
@@ -144,6 +181,10 @@ body {
     body {
         background-image: url(../img/indexBackground.png);
     }
+    .player {
+        width: 10vw;
+        height: 10vw;
+    }
     @media (max-aspect-ratio: 2799/3600) {
         body {
             background-size: auto 100vh;
@@ -158,6 +199,10 @@ body {
 @media (min-aspect-ratio: 1/1) {
     body {
         background-image: url(../img/indexBackground.jpg);
+    }
+    .player {
+        width: 10vh;
+        height: 10vh;
     }
     @media (max-aspect-ratio: 6190/4083) {
         body {
