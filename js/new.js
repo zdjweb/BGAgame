@@ -182,24 +182,25 @@
         },
         // 画布分割
         getCell() {
-            if (window.innerWidth > window.innerHeight) {
+            console.log(this.now);
+            if (this[this.now].offsetWidth > this[this.now].offsetHeight) {
                 this.cell.y = 5;
-                this.cell.height = window.innerHeight / 5;
-                this.cell.x = Math.round(window.innerWidth / this.cell.height);
-                this.cell.width = window.innerWidth / this.cell.x;
+                this.cell.height = this[this.now].offsetHeight / 5;
+                this.cell.x = Math.round(this[this.now].offsetWidth / this.cell.height);
+                this.cell.width = this[this.now].offsetWidth / this.cell.x;
             } else {
                 this.cell.x = 5;
-                this.cell.width = window.innerWidth / 5;
-                this.cell.y = Math.round(window.innerHeight / this.cell.width);
-                this.cell.height = window.innerHeight / this.cell.y;
+                this.cell.width = this[this.now].offsetWidth / 5;
+                this.cell.y = Math.round(this[this.now].offsetHeight / this.cell.width);
+                this.cell.height = this[this.now].offsetHeight / this.cell.y;
             }
         },
         // 获取元素位置
         getSite(obj) {
             const size = obj.offsetWidth;
             return {
-                x: obj.offsetLeft + size / 2,
-                y: obj.offsetTop + size / 2
+                x: +(obj.offsetLeft + size / 2).toFixed(2),
+                y: +(obj.offsetTop + size / 2).toFixed(2)
             };
         },
         // 设置元素位置
@@ -237,41 +238,65 @@
         foe: null,
         // 玩家能量
         engine: 100,
-        // 用于计算能量恢复
+        // 用于计算玩家能量恢复
         times: 0,
+        // 敌人能量
+        foeEngine: [],
+        // 用于计算敌人能量恢复
+        foeTimes: 0,
         // 人物移动
-        move(person, step , obj) {
-            const width = distance.width,
+        move(obj) {
+            const person = obj.person,
+            width = distance.width,
             height = distance.height,
             size = distance.size,
-            speed = size / step;
-            if (obj.up) {
-                if (person.offsetTop - speed > 0) {
-                    person.style.top = +(person.style.top.replace('px', '')) - speed + 'px';
+            speed = size / obj.step,
+            end = obj.end,
+            personSite = canvas.getSite(person),
+            angle = obj.end == null ? (obj.angle != null ? obj.angle / 180 * Math.PI : null) : (() => {
+                const distance = {
+                    x: end.x - personSite.x,
+                    y: end.y - personSite.y
+                };
+                distance.total = Math.sqrt(Math.pow(distance.x, 2) + Math.pow(distance.y, 2));
+                let angle = Math.asin(distance.x / distance.total);
+                if (distance.y > 0) {
+                    angle = -(angle / Math.PI * 180) + 180;
                 } else {
-                    person.style.top = 0;
+                    angle = angle / Math.PI * 180 + 360;
+                }
+                return angle / 180 * Math.PI;
+            })();
+            if (angle == null) {
+                return;
+            }
+            let xSpeed = speed * +(Math.sin(angle).toFixed(2)),
+            ySpeed = speed * +(Math.cos(angle).toFixed(2));
+            ySpeed = -ySpeed;
+            if (end) {
+                if ((end.x < personSite.x && personSite.x + xSpeed < end.x) || (end.x > personSite.x && personSite.x + xSpeed > end.x)) {
+                    xSpeed = end.x - personSite.x;
+                }
+                if ((end.y < personSite.y && personSite.y + ySpeed < end.y) || (end.y > personSite.y && personSite.y + ySpeed > end.y)) {
+                    ySpeed = end.y - personSite.y;
+                }
+                if (Math.abs(parseInt(end.x) - parseInt(personSite.x)) <= 1 && Math.abs(parseInt(end.y) - parseInt(personSite.y)) <= 1) {
+                    return;
                 }
             }
-            if (obj.down) {
-                if (person.offsetTop + speed < height - size) {
-                    person.style.top = +(person.style.top.replace('px', '')) + speed + 'px';
-                } else {
-                    person.style.top = height - size + 'px';
-                }
+            if (person.offsetTop + ySpeed < 0) {
+                person.style.top = 0;
+            } else if (person.offsetTop + ySpeed > height - size) {
+                person.style.top = height - size + 'px';
+            } else {
+                person.style.top = +(person.style.top.replace('px', '')) + ySpeed + 'px';
             }
-            if (obj.left) {
-                if (person.offsetLeft - speed > 0) {
-                    person.style.left = +(person.style.left.replace('px', '')) - speed + 'px';
-                } else {
-                    person.style.left = 0;
-                }
-            }
-            if (obj.right) {
-                if (person.offsetLeft + speed < width - size) {
-                    person.style.left = +(person.style.left.replace('px', '')) + speed + 'px';
-                } else {
-                    person.style.left = width - size + 'px';
-                }
+            if (person.offsetLeft + xSpeed < 0) {
+                person.style.left = 0;
+            } else if (person.offsetLeft + xSpeed > width - size) {
+                person.style.left = width - size + 'px';
+            } else {
+                person.style.left = +(person.style.left.replace('px', '')) + xSpeed + 'px';
             }
         },
         // 生成人物
@@ -290,6 +315,7 @@
             this.foe = [];
             for (let i = 0; i < n; i++) {
                 this.foe[i] = this.create('foe');
+                this.foeEngine[i] = 100;
             }
         },
         // 清空人物
@@ -298,6 +324,8 @@
             this.foe = null;
             this.engine = 100;
             this.times = 0;
+            this.foeEngine = [];
+            this.foeTimes = 0;
         }
     },
     // 闯关模式的火苗
@@ -307,7 +335,7 @@
         // 火苗种类
         type: [],
         // 玩家火苗值
-        number: 0,
+        score: 0,
         // 生成火苗
         create(type) {
             const fire = document.createElement('img');
@@ -315,7 +343,7 @@
             fire.classList.add('fire');
             Object.assign(fire.style, {
                 top: '500px',
-                left: 0
+                left: '500px'
             });
             this.fires.push(fire);
             this.type.push(type);
@@ -325,7 +353,7 @@
         clear() {
             this.fires = [];
             this.type = [];
-            this.number = 0;
+            this.score = 0;
         }
     },
     // 常用距离
@@ -347,7 +375,7 @@
             return person.player.offsetWidth;
         },
         // 玩家与敌人的距离
-        get combat() {
+        get foe() {
             const arr = [];
             for (let i in person.foe) {
                 arr[i] = this.get(canvas.getSite(person.player), canvas.getSite(person.foe[i]));
@@ -355,11 +383,24 @@
             return arr;
         },
         // 玩家与闯关模式的火苗的距离
-        get fires() {
+        get fire() {
             const arr = [];
             for (const i in fire.fires) {
-                if (fire.fires[i] != null) {
+                if (fire.fires[i]) {
                     arr[i] = this.get(canvas.getSite(person.player), canvas.getSite(fire.fires[i]));
+                }
+            }
+            return arr;
+        },
+        // 敌人与闯关模式的火苗的距离
+        get foeFire() {
+            const arr = [];
+            for (const i in person.foe) {
+                arr[i] = [];
+                for (const j in fire.fires) {
+                    if (fire.fires[j]) {
+                        arr[i][j] = this.get(canvas.getSite(person.foe[i]), canvas.getSite(fire.fires[i]));
+                    }
                 }
             }
             return arr;
@@ -399,22 +440,16 @@
         startSet({
             0: 1,
             2: 5,
-        }, 3);
+        }, 1);
         body.onclick = () => {
             startSet({
                 0: 2,
                 2: 8
-            }, 5);
+            }, 1);
         };
         setInterval(() => {
-            let combatDistance = d.combat;
-            for (const i in combatDistance) {
-                if (combatDistance[i] < d.size * 2) {
-                    p.move(p.foe[i], 50 / 1.5, key);
-                } else {
-                    p.move(p.foe[i], 50 / 0.8, key);
-                }
-            }
+            let foeDistance = d.foe;
+            const foeFireDistance = d.foeFire;
             if (p.times == 5) {
                 if (p.engine < 100) {
                     p.engine++;
@@ -422,25 +457,114 @@
                 p.times = 0;
             }
             p.times++;
-            if (key.speed && p.engine > 0) {
-                p.engine--;
-                p.move(p.player, 50 / 2, key);
-            } else {
-                p.move(p.player, 50, key);
+            if (p.foeTimes == 3) {
+                for (const i in p.foeEngine) {
+                    if (p.foeEngine[i] < 100) {
+                        p.foeEngine[i]++;
+                    }
+                }
+                p.foeTimes = 0;
             }
-            combatDistance = d.combat;
-            const firesDistance = d.fires;
-            for (const i in f.fires) {
-                if (firesDistance[i] < d.size / 2 && f.fires[i]) {
-                    c[c.now].removeChild(f.fires[i]);
-                    f.fires[i] = null;
-                    f.number += [1, 5, 10][f.type[i]];
-                    console.log(f.number);
+            p.foeTimes++;
+            const angle = (() => {
+                let angle = {
+                    x: null,
+                    y: null,
+                };
+                if (key.up != key.down) {
+                    if (key.up) {
+                        angle.y = 0;
+                    } else {
+                        angle.y = 180;
+                    }
+                }
+                if (key.left != key.right) {
+                    if (key.left) {
+                        angle.x = 270;
+                        if (angle.y == 0) {
+                            angle.y = 360;
+                        }
+                    } else {
+                        angle.x = 90;
+                    }
+                }
+                if (angle.x != null || angle.y != null) {
+                    return (+angle.x + +angle.y) / (+(angle.x != null) + +(angle.y != null));
+                } else {
+                    return null;
+                }
+            })();
+            if (key.speed && p.engine > 0) {
+                p.move({
+                    person: p.player,
+                    step: 50 / 1.5,
+                    angle: angle
+                });
+                p.engine--;
+            } else {
+                p.move({
+                    person: p.player,
+                    step: 50,
+                    angle: angle
+                });
+            }
+            for (const i in foeDistance) {
+                if (foeDistance[i] < d.size * 3) {
+                    if (foeDistance[i] < d.size * 1.5 && p.foeEngine[i] > 0) {
+                        p.move({
+                            person: p.foe[i],
+                            step: 50 / 0.7,
+                            end: c.getSite(p.player)
+                        });
+                        p.foeEngine[i]--;
+                    } else {
+                        p.move({
+                            person: p.foe[i],
+                            step: 50 / 0.5,
+                            end: c.getSite(p.player)
+                        });
+                    }
+                } else {
+                    if (f.fires.length) {
+                        let min = 0;
+                        for (let i = 1; i < foeFireDistance.length; i++) {
+                            if (foeFireDistance[min] > foeFireDistance[i]) {
+                                min = i;
+                            }
+                        }
+                        p.move({
+                            person: p.foe[i],
+                            step: 50 / 0.5,
+                            end: c.getSite(f.fires[min])
+                        });
+                    } else {
+                        p.move({
+                            person: p.foe[i],
+                            step: 50 / 0.5,
+                            end: {
+                                x: c[c.now].offsetWidth / 2,
+                                y: c[c.now].offsetHeight / 2 
+                            }
+                        });
+                    }
                 }
             }
-            for (const i in combatDistance) {
-                if (combatDistance[i] < d.size) {
-                    console.log(555);
+            const fireDistance = d.fire;
+            for (let i = 0; i < f.fires.length; i) {
+                if (fireDistance[i] < d.size / 2 && f.fires[i]) {
+                    c[c.now].removeChild(f.fires[i]);
+                    f.score += [1, 5, 10][f.type[i]];
+                    f.fires.splice(i, 1);
+                    f.type.splice(i, 1);
+                    console.log(f.score);
+                } else {
+                    i++;
+                }
+            }
+            foeDistance = d.foe;
+            for (const i in foeDistance) {
+                if (foeDistance[i] < d.size) {
+                    //console.log(555);
                 }
             }
         }, 10);
@@ -482,6 +606,8 @@
     });
     // 页面大小改变时重新进行画布分割
     window.addEventListener('resize', () => {
-        canvas.getCell();
+        if (canvas.now) {
+            canvas.getCell();
+        }
     });
 })();
