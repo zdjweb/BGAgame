@@ -303,6 +303,11 @@
         create(type) {
             const person = document.createElement('div');
             person.classList.add(type);
+            if (navigator.userAgent.toLowerCase().includes('mobile')) {
+                person.classList.add('mobilePerson');
+            } else {
+                person.classList.add('person');
+            }
             const img = document.createElement('div');
             img.classList.add('img');
             person.appendChild(img);
@@ -334,26 +339,74 @@
         fires: [],
         // 火苗种类
         type: [],
+        // 可以放置火苗的位置
+        can: [],
+        // 火苗位置
+        site: [],
         // 玩家火苗值
         score: 0,
+        // 获取可以放置火苗的位置
+        getSite() {
+            for (let i = 1; i < canvas.cell.y - 1; i++) {
+                this.site[i] = [];
+                for (let j = 0; j < canvas.cell.x; j++) {
+                    this.site[i][j] = j;
+                }
+            }
+        },
         // 生成火苗
         create(type) {
             const fire = document.createElement('img');
             fire.src = 'img/fire' + ['Small', 'Middle', 'Big'][type] + '.png';
             fire.classList.add('fire');
-            Object.assign(fire.style, {
-                top: '500px',
-                left: '500px'
-            });
+            if (navigator.userAgent.toLowerCase().includes('mobile')) {
+                fire.classList.add('mobileFire');
+            }
             this.fires.push(fire);
             this.type.push(type);
             canvas[canvas.now].appendChild(fire);
+            const number = (() => {
+                let number = 0;
+                for (const i in this.site) {
+                    if (this.site[i]) {
+                        number++;
+                    }
+                }
+                return number;
+            })(),
+            siteY = (() => {
+                let randomNumber = Math.floor(Math.random() * number);
+                for (const i in this.site) {
+                    if (this.site[i]) {
+                        if (!randomNumber) {
+                            return +i;
+                        }
+                        randomNumber--;
+                    }
+                }
+            })(),
+            siteX = (() => {
+                const randomNumber = Math.floor(Math.random() * this.site[siteY].length);
+                return this.site[siteY].splice(randomNumber, 1)[0];
+            })();
+            if (!this.site[siteY].length) {
+                this.site[siteY] = null;
+            }
+            canvas.setSite(fire, siteX, siteY);
+        },
+        // 移除火苗
+        delete(i) {
+            canvas[canvas.now].removeChild(this.fires[i]);
+            this.fires.splice(i, 1);
+            return [1, 5, 10][this.type.splice(i, 1)[0]];
         },
         // 清空火苗
         clear() {
             this.fires = [];
             this.type = [];
+            this.site = [];
             this.score = 0;
+            this.getSite();
         }
     },
     // 常用距离
@@ -399,7 +452,7 @@
                 arr[i] = [];
                 for (const j in fire.fires) {
                     if (fire.fires[j]) {
-                        arr[i][j] = this.get(canvas.getSite(person.foe[i]), canvas.getSite(fire.fires[i]));
+                        arr[i][j] = this.get(canvas.getSite(person.foe[i]), canvas.getSite(fire.fires[j]));
                     }
                 }
             }
@@ -418,15 +471,18 @@
     const getFire = (c, p, f, d) => {
         const startSet = (fires, foeNumber) => {
             c.clear();
+            // 画布分格
+            c.getCell();
             p.clear();
             f.clear();
+            // 生成火苗并随机设置位置
             for (const i in fires) {
                 for (let j = 0; j < fires[i]; j++) {
-                    f.create(i);
+                    f.create(+i);
                 }
             }
             p.get(foeNumber);
-            c.getCell();
+            // 生成敌人并随机设置位置
             const foeSite = [];
             for (let i = 0; i < c.cell.x; i++) {
                 foeSite.push(i);
@@ -435,6 +491,7 @@
                 const randomSite = Math.floor(Math.random() * foeSite.length);
                 c.setSite(p.foe[i], foeSite.splice(randomSite, 1)[0], 0);
             }
+            // 生成玩家并随机设置位置
             c.setSite(p.player, Math.floor(Math.random() * c.cell.x), c.cell.y - 1);
         };
         startSet({
@@ -449,7 +506,7 @@
         };
         setInterval(() => {
             let foeDistance = d.foe;
-            const foeFireDistance = d.foeFire;
+            let foeFireDistance = d.foeFire;
             if (p.times == 5) {
                 if (p.engine < 100) {
                     p.engine++;
@@ -527,9 +584,9 @@
                 } else {
                     if (f.fires.length) {
                         let min = 0;
-                        for (let i = 1; i < foeFireDistance.length; i++) {
-                            if (foeFireDistance[min] > foeFireDistance[i]) {
-                                min = i;
+                        for (let j = 1; j < foeFireDistance[i].length; j++) {
+                            if (foeFireDistance[i][min] > foeFireDistance[i][j]) {
+                                min = +j;
                             }
                         }
                         p.move({
@@ -551,14 +608,23 @@
             }
             const fireDistance = d.fire;
             for (let i = 0; i < f.fires.length; i) {
-                if (fireDistance[i] < d.size / 2 && f.fires[i]) {
-                    c[c.now].removeChild(f.fires[i]);
-                    f.score += [1, 5, 10][f.type[i]];
-                    f.fires.splice(i, 1);
-                    f.type.splice(i, 1);
+                if (fireDistance[i] < d.size / 2) {
+                    f.score += f.delete(i);
+                    fireDistance.splice(i, 1);
                     console.log(f.score);
                 } else {
                     i++;
+                }
+            }
+            foeFireDistance = d.foeFire;
+            for (const i in foeFireDistance) {
+                for (let j = 0; j < f.fires.length; j) {
+                    if (foeFireDistance[i][j] < d.size / 2) {
+                        f.delete(j);
+                        foeFireDistance[i].splice(j, 1);
+                    } else {
+                        j++;
+                    }
                 }
             }
             foeDistance = d.foe;

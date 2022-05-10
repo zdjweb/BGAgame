@@ -201,16 +201,19 @@ body {
     body {
         background-image: url(../img/indexBackground.png);
     }
-    .player {
+    .person {
         width: 10vw;
         height: 10vw;
     }
-    .foe {
-        width: 10vw;
-        height: 10vw;
+    .mobilePerson {
+        width: 15vw;
+        height: 15vw;
     }
     .fire {
         height: 5vw;
+    }
+    .mobileFire {
+        height: 7.5vw;
     }
     @media (max-aspect-ratio: 2799/3600) {
         body {
@@ -227,16 +230,19 @@ body {
     body {
         background-image: url(../img/indexBackground.jpg);
     }
-    .player {
+    .person {
         width: 10vh;
         height: 10vh;
     }
-    .foe {
-        width: 10vh;
-        height: 10vh;
+    .mobilePerson {
+        width: 15vh;
+        height: 15vh;
     }
     .fire {
         height: 5vh;
+    }
+    .mobileFire {
+        height: 7.5vh;
     }
     @media (max-aspect-ratio: 6190/4083) {
         body {
