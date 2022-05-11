@@ -1,9 +1,6 @@
 * {
     scrollbar-width: 0;
 }
-::-webkit-scrollbar {
-    width: 0;
-}
 body {
     margin: 0;
     padding: 0;
@@ -12,6 +9,11 @@ body {
     background: #000000;
     background-position: center;
     user-select: none;
+    background-image: url(../img/indexBackground.png);
+}
+*::-webkit-scrollbar {
+    width: 0;
+    height: 0;
 }
 .page {
     display: none;
@@ -19,145 +21,84 @@ body {
     width: 100%;
     height: 100%;
 }
+.setting {
+    display: inline-block;
+    margin-top: 4vw;
+    margin-left: 4vw;
+    font-size: 4vw;
+    line-height: 6vw;
+    width: fit-content;
+    text-align: left;
+    color: #FFFFFF;
+}
+.font {
+    width: 100%;
+    text-align: center;
+    color: #FFFFFF;
+}
+.logo {
+    vertical-align: top;
+    padding-top: 1vw;
+    width: 4vw;
+}
 #index {
     display: block;
     opacity: 1;
     background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.8));
 }
-#index .font {
-    width: 100%;
-    text-align: center;
-    color: #FFFFFF;
+#name {
+    padding-top: calc((50vh - 10.5vw) / 2);
+    padding-bottom: calc((50vh - 10.5vw) / 2);
+    font-size: 4vw;
+    line-height: 6vw;
 }
-#index #help {
+#tips {
+    font-size: 6vw;
+    line-height: 9vw;
+}
+#help {
+    padding-top: 1.5vw;
+    font-size: 3vw;
+    line-height: 4.5vw;
     color: #FF3333;
+}
+#advice {
+    padding-top: calc((50vh - 44vw) / 4 * 3);
+    font-size: 5vw;
+    line-height: 7.5vw;
+}
+#adviceMain {
+    padding-top: 2vw;
+    font-size: 4vw;
+    line-height: 6vw;
 }
 #choice {
     background: rgba(0, 0, 0, 0.5);
 }
-#choice .font {
-    width: 100%;
-    text-align: center;
-    color: #FFFFFF;
-}
-#choice .setting {
-    display: inline-block;
-    width: fit-content;
-    text-align: left;
-    color: #FFFFFF;
-}
-#light {
-    background: #000000;
-}
-#fire {
-    background: #000000;
-}
-.player {
-    position: fixed;
-    border-radius: 50%;
-    background: conic-gradient(#FF3333 0, #FF3333 50%, #666666 50%, #666666 100%);
-}
-.player .img {
-    margin: 5%;
-    width: 90%;
-    height: 90%;
-    border-radius: 50%;
-    background: #FF3333;
-    background-image: url('../img/player.jpg');
-    background-size: 100% 100%;
-}
-.foe {
-    position: fixed;
-    border-radius: 50%;
-    background: conic-gradient(#FF3333 0, #FF3333 50%, #666666 50%, #666666 100%);
-}
-.foe .img {
-    margin: 5%;
-    width: 90%;
-    height: 90%;
-    border-radius: 50%;
-    background: #666666 ;
-    background-image: url('../img/foe.png');
-    background-size: 100% 100%;
-}
-.fire {
-    position: fixed;
-}
 #setting {
-    display: none;
-    opacity: 0;
     position: fixed;
     z-index: 1;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
 }
-#setting .main {
+.main {
     margin-top: 20vh;
+    margin-left: 25vw;
+    width: 50vw;
     height: 50%;
     background: rgba(0, 0, 0, 0.3);
 }
 #setting .font {
-    width: 100%;
-    text-align: center;
-    color: #FFFFFF;
+    font-size: 5vw;
+    line-height: 10vw;
     background: rgba(0, 0, 0, 0.3);
 }
-@media (max-aspect-ratio: 2/3) {
-    #index .logo {
-        vertical-align: top;
-        padding-top: 1vw;
-        width: 4vw;
-    }
-    #index #name {
-        vertical-align: top;
-        padding-top: calc((50vh - 10.5vw) / 2);
-        padding-bottom: calc((50vh - 10.5vw) / 2);
-        font-size: 4vw;
-        line-height: 6vw;
-    }
-    #tips {
-        font-size: 6vw;
-        line-height: 9vw;
-    }
-    #help {
-        padding-top: 1.5vw;
-        font-size: 3vw;
-        line-height: 4.5vw;
-    }
-    #advice {
-        padding-top: calc((50vh - 44vw) / 4 * 3);
-        font-size: 5vw;
-        line-height: 7.5vw;
-    }
-    #adviceMain {
-        padding-top: 2vw;
-        font-size: 4vw;
-        line-height: 6vw;
-    }
-    .setting {
-        margin-top: 4vw;
-        margin-left: 4vw;
-        font-size: 4vw;
-        line-height: 6vw;
-    }
-    #setting .main {
-        margin-left: 25vw;
-        width: 50vw;
-    }
-    #setting .font {
-        font-size: 5vw;
-        line-height: 10vw;
-    }
-}
 @media (min-aspect-ratio: 2/3) {
-    #index .logo {
-        vertical-align: top;
+    .logo {
         padding-top: 0.75vh;
         width: 3vh;
     }
-    #index #name {
+    #name {
         padding-top: 21.0625vh;
         padding-bottom: 21.0625vh;
         font-size: 3vh;
@@ -188,7 +129,7 @@ body {
         font-size: 3vh;
         line-height: 4.5vh;
     }
-    #setting .main {
+    .main {
         margin-left: calc((100vw - 37.5vh) / 2);
         width: 37.5vh;
     }
@@ -197,57 +138,20 @@ body {
         line-height: 7.5vh;
     }
 }
-@media (max-aspect-ratio: 1/1) {
+body {
+    background-size: auto 100vh;
+}
+@media (min-aspect-ratio: 2799/3600) {
     body {
-        background-image: url(../img/indexBackground.png);
-    }
-    .person {
-        width: 10vw;
-        height: 10vw;
-    }
-    .mobilePerson {
-        width: 15vw;
-        height: 15vw;
-    }
-    .fire {
-        height: 5vw;
-    }
-    .mobileFire {
-        height: 7.5vw;
-    }
-    @media (max-aspect-ratio: 2799/3600) {
-        body {
-            background-size: auto 100vh;
-        }
-    }
-    @media (min-aspect-ratio: 2799/3600) {
-        body {
-            background-size: 100vw auto;
-        }
+        background-size: 100vw auto;
     }
 }
 @media (min-aspect-ratio: 1/1) {
     body {
         background-image: url(../img/indexBackground.jpg);
     }
-    .person {
-        width: 10vh;
-        height: 10vh;
-    }
-    .mobilePerson {
-        width: 15vh;
-        height: 15vh;
-    }
-    .fire {
-        height: 5vh;
-    }
-    .mobileFire {
-        height: 7.5vh;
-    }
-    @media (max-aspect-ratio: 6190/4083) {
-        body {
-            background-size: auto 100vh;
-        }
+    body {
+        background-size: auto 100vh;
     }
     @media (min-aspect-ratio: 6190/4083) {
         body {

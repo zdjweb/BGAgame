@@ -1,0 +1,59 @@
+.canvas {
+    background: #000000;
+}
+.person {
+    z-index: 1;
+    position: fixed;
+    width: 10vw;
+    height: 10vw;
+    border-radius: 50%;
+}
+.mobilePerson {
+    width: 15vw;
+    height: 15vw;
+}
+.player {
+    background: conic-gradient(#FF3333 0, #FF3333 50%, #666666 50%, #666666 100%);
+}
+.foe {
+    background: conic-gradient(#666666 0, #666666 50%, #FF3333 50%, #FF3333 100%);
+}
+.player div { 
+    background: #FF3333;
+    background-image: url('../img/player.jpg');
+}
+.foe div {
+    background: #666666 ;
+    background-image: url('../img/foe.png');
+}
+.person div {
+    margin: 5%;
+    width: 90%;
+    height: 90%;
+    border-radius: 50%;
+    background-size: 100% 100%;
+}
+.fire {
+    z-index: 0;
+    position: fixed;
+    height: 5vw;
+}
+.mobileFire {
+    height: 7.5vw;
+}
+@media (min-aspect-ratio: 1/1) {
+    .person {
+        width: 10vh;
+        height: 10vh;
+    }
+    .mobilePerson {
+        width: 15vh;
+        height: 15vh;
+    }
+    .fire {
+        height: 5vh;
+    }
+    .mobileFire {
+        height: 7.5vh;
+    }
+}
